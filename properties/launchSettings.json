@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Play": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Program Files\\Godot\\4.5 (stable)\\Godot_v4.5-stable_mono_win64.exe",
+      "workingDirectory": ".",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b68pvctl3pur2"]
+
+[ext_resource type="Script" uid="uid://bxel1khva5iqh" path="res://scripts/levels/Level.cs" id="1_bjt0b"]
+
+[node name="Battle" type="SubViewport"]
+script = ExtResource("1_bjt0b")

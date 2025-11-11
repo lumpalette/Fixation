@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://pgmrcecerpuq"]
+
+[ext_resource type="Script" uid="uid://bxel1khva5iqh" path="res://scripts/levels/Level.cs" id="1_qv5wr"]
+[ext_resource type="Texture2D" uid="uid://k38h82pd6oev" path="res://assets/textures/heart.png" id="2_r5yjo"]
+
+[node name="Test1" type="SubViewport"]
+size = Vector2i(320, 180)
+script = ExtResource("1_qv5wr")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+centered = false
+pixel_size = 1.0
+texture_filter = 0
+texture = ExtResource("2_r5yjo")
