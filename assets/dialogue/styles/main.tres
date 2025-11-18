@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TextStyle" load_steps=3 format=3 uid="uid://yh4ju5ufm6qh"]
+
+[ext_resource type="Script" uid="uid://bv6buh7jxwohj" path="res://scripts/dialogue/TextStyle.cs" id="1_bwvyt"]
+[ext_resource type="FontFile" uid="uid://dis601ygwcd1u" path="res://assets/fonts/main.ttf" id="1_ngtvs"]
+
+[resource]
+script = ExtResource("1_bwvyt")
+Font = ExtResource("1_ngtvs")
+FontSize = 8
+Color = Color(1, 1, 1, 1)
+WriteSpeed = 0.05
+metadata/_custom_type_script = "uid://bv6buh7jxwohj"
