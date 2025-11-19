@@ -4,7 +4,7 @@ using System;
 namespace Fixation.Input;
 
 /// <summary>
-/// Provides a simple, static interface for querying information about the input system. This class cannot be inherited.
+/// Provides a simple, static interface for querying information about input state and configuration. This class cannot be inherited.
 /// </summary>
 public static class InputService
 {
@@ -70,7 +70,7 @@ public static class InputService
 			m2[GameButton.Down] = new InputEventJoypadButton() { ButtonIndex = JoyButton.DpadDown };
 			m2[GameButton.Left] = new InputEventJoypadButton() { ButtonIndex = JoyButton.DpadLeft };
 			m2[GameButton.Right] = new InputEventJoypadButton() { ButtonIndex = JoyButton.DpadRight };
-
+			
 			return [m1, m2];
 		}
 	}
@@ -141,25 +141,6 @@ public static class InputService
 		}.Normalized();
 	}
 
-	/// <summary>
-	/// Determines which device type corresponds to the specified device ID.
-	/// </summary>
-	/// <param name="deviceId">The ID of the input device to check.</param>
-	/// <returns>One of the <see cref="DeviceType"/> values.</returns>
-	public static DeviceType GetDeviceType(int? deviceId)
-	{
-		if (deviceId == -1)
-		{
-			return DeviceType.Keyboard;
-		}
-		if (deviceId >= 0)
-		{
-			return DeviceType.Joypad;
-		}
-
-		return DeviceType.Unknown;
-	}
-
 	private static bool PlayerButtonSatisfiesPredicate(PlayerInput player, GameButton button, Predicate<GameButtonState> predicate)
 	{
 		if (player is null)
@@ -167,31 +148,19 @@ public static class InputService
 			return false;
 		}
 
-		if (button == GameButton.Any)
+		if ((button == GameButton.Any) || (button == GameButton.None))
 		{
 			for (int i = 0; i < (int)GameButton.Count; i++)
 			{
 				if (predicate(player.GetButtonState((GameButton)i)))
 				{
-					return true;
+					return button == GameButton.Any;
 				}
 			}
 
-			return false;
+			return button == GameButton.None;
 		}
-		if (button == GameButton.None)
-		{
-			for (int i = 0; i < (int)GameButton.Count; i++)
-			{
-				if (predicate(player.GetButtonState((GameButton)i)))
-				{
-					return false;
-				}
-			}
 
-			return true;
-		}
-		
 		return predicate(player.GetButtonState(button));
 	}
 }

@@ -46,7 +46,7 @@ public sealed partial class PlayerInputManager : Node
 			throw new InvalidOperationException($"Cannot create player for index {playerIndex} because a player already exist");
 		}
 
-		var player = (PlayerInput)Activator.CreateInstance(typeof(PlayerInput), true);
+		var player = (PlayerInput)Activator.CreateInstance(typeof(PlayerInput), nonPublic: true);
 		player.Name = "Player_" + playerIndex;
 		player.DeviceId = deviceId;
 

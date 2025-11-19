@@ -23,8 +23,8 @@ public sealed partial class PlayerInput : Node
 			{
 				int deviceId = value.Value;
 
-				bool isKeyboard = InputService.GetDeviceType(deviceId) == DeviceType.Keyboard;
-				bool isJoypad = (InputService.GetDeviceType(deviceId) == DeviceType.Joypad) && GDInput.GetConnectedJoypads().Contains(deviceId);
+				bool isKeyboard = deviceId == -1;
+				bool isJoypad = GDInput.GetConnectedJoypads().Contains(deviceId);
 				
 				if ((!isKeyboard) && (!isJoypad))
 				{
@@ -39,17 +39,31 @@ public sealed partial class PlayerInput : Node
 	/// <summary>
 	/// The type of input device assigned to the player. This property is read-only.
 	/// </summary>
-	public DeviceType DeviceType => InputService.GetDeviceType(DeviceId);
+	public DeviceType DeviceType
+	{
+		get
+		{
+			if (DeviceId == -1)
+			{
+				return DeviceType.Keyboard;
+			}
+			if (DeviceId >= 0)
+			{
+				return DeviceType.Joypad;
+			}
+			return DeviceType.Unknown;
+		}
+	}
 
 	/// <summary>
 	/// A read-only collection containing the primary (0) and secondary (1) keyboard event maps. This property is read-only.
 	/// </summary>
-	public ReadOnlyCollection<InputEventMap> KeyEventMaps => new(_keyMap);
+	public ReadOnlyCollection<InputEventMap> KeyEventMaps { get; }
 
 	/// <summary>
 	/// A read-only collection containing the primary (0) and secondary (1) joypad event maps. This property is read-only.
 	/// </summary>
-	public ReadOnlyCollection<InputEventMap> JoyEventMaps => new(_joyMap);
+	public ReadOnlyCollection<InputEventMap> JoyEventMaps { get; }
 	
 	/// <summary>
 	/// A value between 0 and 1 representing the current joypad deadzone value.
@@ -75,31 +89,60 @@ public sealed partial class PlayerInput : Node
 	public bool IsDeviceConnected => _deviceId is not null;
 
 	/// <summary>
+	/// Returns whether a game button is currently held down.
+	/// </summary>
+	/// <param name="button">The game button to check.</param>
+	/// <returns><see langword="true"/> if <paramref name="button"/> is down; <see langword="false"/> otherwise.</returns>
+	public bool IsDown(GameButton button)
+	{
+		static bool Predicate(GameButtonState state)
+		{
+			return (state == GameButtonState.Pressed) || (state == GameButtonState.Down);
+		}
+
+		return ButtonSatisfiesPredicate(button, Predicate);
+	}
+
+	/// <summary>
+	/// Returns whether a game button was pressed in the current frame.
+	/// </summary>
+	/// <param name="button">The game button to check.</param>
+	/// <returns><see langword="true"/> if <paramref name="button"/> was pressed in this frame; <see langword="false"/> otherwise.</returns>
+	public bool IsPressed(GameButton button)
+	{
+		static bool Predicate(GameButtonState state)
+		{
+			return state == GameButtonState.Pressed;
+		}
+
+		return ButtonSatisfiesPredicate(button, Predicate);
+	}
+
+	/// <summary>
+	/// Returns whether a game button was released in the current frame.
+	/// </summary>
+	/// <param name="button">The game button to check.</param>
+	/// <returns><see langword="true"/> if <paramref name="button"/> was released in this frame; <see langword="false"/> otherwise.</returns>
+	public bool IsReleased(GameButton button)
+	{
+		static bool Predicate(GameButtonState state)
+		{
+			return state == GameButtonState.Released;
+		}
+
+		return ButtonSatisfiesPredicate(button, Predicate);
+	}
+
+	/// <summary>
 	/// Gets the current press state of the given button.
 	/// </summary>
-	/// <param name="button">The game button to query.</param>
+	/// <param name="button">The game button to query. The button must be real.</param>
 	/// <returns>A <see cref="GameButtonState"/> representing the state of <paramref name="button"/>.</returns>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="button"/> is not a real button.</exception>
 	public GameButtonState GetButtonState(GameButton button)
 	{
-		ButtonState state = _buttonStates[(int)button];
-		if (Engine.IsInPhysicsFrame())
-		{
-			if (state.Down)
-			{
-				return (Engine.GetPhysicsFrames() == state.PressedPhysicsFrame) ? GameButtonState.Pressed : GameButtonState.Down;
-			}
-
-			return (Engine.GetPhysicsFrames() == state.ReleasedPhysicsFrame) ? GameButtonState.Released : GameButtonState.Up;
-		}
-		else
-		{
-			if (state.Down)
-			{
-				return (Engine.GetProcessFrames() == state.PressedProcessFrame) ? GameButtonState.Pressed : GameButtonState.Down;
-			}
-
-			return (Engine.GetProcessFrames() == state.ReleasedProcessFrame) ? GameButtonState.Released : GameButtonState.Up;
-		}
+		ValidateButtonIsReal(button);
+		return GetButtonStateUnsafe((int)button);
 	}
 
 	/// <summary>
@@ -108,21 +151,12 @@ public sealed partial class PlayerInput : Node
 	/// <remarks>
 	/// Calling this method when a button is already down does nothing.
 	/// </remarks>
-	/// <param name="button">The game button to press.</param>
+	/// <param name="button">The game button to press. The button must be real.</param>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="button"/> is not a real button.</exception>
 	public void PressButton(GameButton button)
 	{
-		ButtonState state = _buttonStates[(int)button];
-		if (!state.Down)
-		{
-			state.Down = true;
-			state.PressedProcessFrame = Engine.GetProcessFrames();
-			state.PressedPhysicsFrame = Engine.GetPhysicsFrames();
-
-			if (!Engine.IsInPhysicsFrame())
-			{
-				state.PressedPhysicsFrame++;
-			}
-		}
+		ValidateButtonIsReal(button);
+		PressButtonUnsafe((int)button, Engine.IsInPhysicsFrame());
 	}
 
 	/// <summary>
@@ -131,21 +165,12 @@ public sealed partial class PlayerInput : Node
 	/// <remarks>
 	/// Calling this method when a button is already up does nothing.
 	/// </remarks>
-	/// <param name="button">The game button to release.</param>
+	/// <param name="button">The game button to release. The button must be real.</param>
+	/// <exception cref="ArgumentException">Thrown when <paramref name="button"/> is not a real button.</exception>
 	public void ReleaseButton(GameButton button)
 	{
-		ButtonState state = _buttonStates[(int)button];
-		if (state.Down)
-		{
-			state.Down = false;
-			state.ReleasedProcessFrame = Engine.GetProcessFrames();
-			state.ReleasedPhysicsFrame = Engine.GetPhysicsFrames();
-
-			if (!Engine.IsInPhysicsFrame())
-			{
-				state.ReleasedPhysicsFrame++;
-			}
-		}
+		ValidateButtonIsReal(button);
+		ReleaseButtonUnsafe((int)button, Engine.IsInPhysicsFrame());
 	}
 
 	/// <summary>
@@ -192,27 +217,72 @@ public sealed partial class PlayerInput : Node
 
 		_keyMap = InputService.DefaultKeyEventMaps;
 		_joyMap = InputService.DefaultJoyEventMaps;
+
+		KeyEventMaps = Array.AsReadOnly(_keyMap);
+		JoyEventMaps = Array.AsReadOnly(_joyMap);
 	}
 
-	private void PressButtonInternal(int buttonIndex)
+	private static void ValidateButtonIsReal(GameButton button)
+	{
+		int buttonIndex = (int)button;
+		if ((buttonIndex < 0) || (buttonIndex >= (int)GameButton.Count))
+		{
+			throw new ArgumentException($"Button '{button}' is not a real button", nameof(button));
+		}
+	}
+
+	private GameButtonState GetButtonStateUnsafe(int buttonIndex)
+	{
+		ButtonState state = _buttonStates[buttonIndex];
+		if (Engine.IsInPhysicsFrame())
+		{
+			if (state.Down)
+			{
+				return (Engine.GetPhysicsFrames() == state.PressedPhysicsFrame) ? GameButtonState.Pressed : GameButtonState.Down;
+			}
+
+			return (Engine.GetPhysicsFrames() == state.ReleasedPhysicsFrame) ? GameButtonState.Released : GameButtonState.Up;
+		}
+		else
+		{
+			if (state.Down)
+			{
+				return (Engine.GetProcessFrames() == state.PressedProcessFrame) ? GameButtonState.Pressed : GameButtonState.Down;
+			}
+
+			return (Engine.GetProcessFrames() == state.ReleasedProcessFrame) ? GameButtonState.Released : GameButtonState.Up;
+		}
+	}
+
+	private void PressButtonUnsafe(int buttonIndex, bool inPhysicsFrame)
 	{
 		ButtonState state = _buttonStates[buttonIndex];
 		if (!state.Down)
 		{
 			state.Down = true;
 			state.PressedProcessFrame = Engine.GetProcessFrames();
-			state.PressedPhysicsFrame = Engine.GetPhysicsFrames() + 1;
+			state.PressedPhysicsFrame = Engine.GetPhysicsFrames();
+
+			if (inPhysicsFrame)
+			{
+				state.PressedPhysicsFrame++;
+			}
 		}
 	}
 
-	private void ReleaseButtonInternal(int buttonIndex)
+	private void ReleaseButtonUnsafe(int buttonIndex, bool inPhysicsFrame)
 	{
 		ButtonState state = _buttonStates[buttonIndex];
 		if (state.Down)
 		{
 			state.Down = false;
 			state.ReleasedProcessFrame = Engine.GetProcessFrames();
-			state.ReleasedPhysicsFrame = Engine.GetPhysicsFrames() + 1;
+			state.ReleasedPhysicsFrame = Engine.GetPhysicsFrames();
+
+			if (inPhysicsFrame)
+			{
+				state.ReleasedPhysicsFrame++;
+			}
 		}
 	}
 
@@ -220,7 +290,16 @@ public sealed partial class PlayerInput : Node
 	{
 		static bool IsEventActive(InputEvent e)
 		{
-			return (e is InputEventKey key) && GDInput.IsPhysicalKeyPressed(key.PhysicalKeycode);
+			if (e is InputEventKey key)
+			{
+				return GDInput.IsPhysicalKeyPressed(key.PhysicalKeycode);
+			}
+			if (e is InputEventMouseButton mbutton)
+			{
+				return GDInput.IsMouseButtonPressed(mbutton.ButtonIndex);
+			}
+
+			return false;
 		}
 
 		for (int i = 0; i < (int)GameButton.Count; i++)
@@ -228,11 +307,11 @@ public sealed partial class PlayerInput : Node
 			var button = (GameButton)i;
 			if (IsEventActive(_keyMap[0][button]) || IsEventActive(_keyMap[1][button]))
 			{
-				PressButtonInternal(i);
+				PressButtonUnsafe(i, false);
 			}
 			else
 			{
-				ReleaseButtonInternal(i);
+				ReleaseButtonUnsafe(i, false);
 			}
 		}
 	}
@@ -263,13 +342,31 @@ public sealed partial class PlayerInput : Node
 			var button = (GameButton)i;
 			if (IsEventActive(_joyMap[0][button], deviceId, Deadzone) || IsEventActive(_joyMap[1][button], deviceId, Deadzone))
 			{
-				PressButtonInternal(i);
+				PressButtonUnsafe(i, false);
 			}
 			else
 			{
-				ReleaseButtonInternal(i);
+				ReleaseButtonUnsafe(i, false);
 			}
 		}
+	}
+
+	private bool ButtonSatisfiesPredicate(GameButton button, Predicate<GameButtonState> predicate)
+	{
+		if ((button == GameButton.Any) || (button == GameButton.None))
+		{
+			for (int i = 0; i < (int)GameButton.Count; i++)
+			{
+				if (predicate(GetButtonState((GameButton)i)))
+				{
+					return button == GameButton.Any;
+				}
+			}
+
+			return button == GameButton.None;
+		}
+
+		return predicate(GetButtonState(button));
 	}
 
 	private int? _deviceId;
@@ -277,7 +374,7 @@ public sealed partial class PlayerInput : Node
 	private readonly ButtonState[] _buttonStates;
 	private readonly InputEventMap[] _keyMap;
 	private readonly InputEventMap[] _joyMap;
-
+	
 	// This class defines 4 timestamps to record when the player presses or releases a game button for the two game loops of the engine.
 	// This is because InputManager.IsPressed/Released() can be called in _Process() and _PhysicsProcess(). The way these methods work
 	// is by comparing if the current frame matches the recorded frame. Since the process and physics loops can go at different speeds,
@@ -290,9 +387,9 @@ public sealed partial class PlayerInput : Node
 		public ulong PressedProcessFrame;
 
 		public ulong PressedPhysicsFrame;
+		
+		public ulong ReleasedProcessFrame = ulong.MaxValue;
 
-		public ulong ReleasedProcessFrame;
-
-		public ulong ReleasedPhysicsFrame;
+		public ulong ReleasedPhysicsFrame = ulong.MaxValue;
 	}
 }
