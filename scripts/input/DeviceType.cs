@@ -11,7 +11,7 @@ public enum DeviceType
 	Unknown,
 
 	/// <summary>
-	/// A keyboard device.
+	/// Keyboard and mouse devices.
 	/// </summary>
 	Keyboard,
 

@@ -19,7 +19,7 @@ public sealed class InputEventMap
 	/// <summary>
 	/// Gets or sets the input event associated to the given game button.
 	/// </summary>
-	/// <param name="button">The game button to access.</param>
+	/// <param name="button">The game button to access. The button must be real.</param>
 	/// <returns>The <see cref="InputEvent"/> associated to <paramref name="button"/>, or <see langword="null"/> if no event is assigned.</returns>
 	/// <exception cref="ArgumentException">Thrown when <paramref name="button"/> is not a real button.</exception>
 	public InputEvent this[GameButton button]
@@ -37,19 +37,6 @@ public sealed class InputEventMap
 	}
 
 	/// <summary>
-	/// Determines whether a game button is associated to the given input event.
-	/// </summary>
-	/// <param name="button">The game button to query.</param>
-	/// <param name="e">The input event to check.</param>
-	/// <returns><see langword="true"/> if <paramref name="button"/> is associated with <paramref name="e"/>; <see langword="false"/> otherwise.</returns>
-	/// <exception cref="ArgumentException">Thrown when <paramref name="button"/> is not a real button.</exception>
-	public bool ButtonHasEvent(GameButton button, InputEvent e)
-	{
-		ValidateButtonIsReal(button);
-		return ButtonHasEventUnsafe(button, e);
-	}
-
-	/// <summary>
 	/// Finds the game button associated to the given input event.
 	/// </summary>
 	/// <param name="e">The input event to check.</param>
@@ -58,10 +45,9 @@ public sealed class InputEventMap
 	{
 		for (int i = 0; i < (int)GameButton.Count; i++)
 		{
-			var current = (GameButton)i;
-			if (ButtonHasEventUnsafe(current, e))
+			if (_events[i].IsMatch(e, e is InputEventJoypadMotion))
 			{
-				return current;
+				return (GameButton)i;
 			}
 		}
 
@@ -72,7 +58,7 @@ public sealed class InputEventMap
 	/// Copies the input events from another event map to this map.
 	/// </summary>
 	/// <param name="source">The event map to copy.</param>
-	/// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="source"/> is <see langword="null"/>.</exception>
 	public void Copy(InputEventMap source)
 	{
 		if (source is null)
@@ -98,17 +84,6 @@ public sealed class InputEventMap
 		{
 			throw new ArgumentException($"Button '{button}' is not a real button", nameof(button));
 		}
-	}
-
-	private bool ButtonHasEventUnsafe(GameButton button, InputEvent e)
-	{
-		InputEvent current = _events[(int)button];
-		if ((e is null) || (current is null))
-		{
-			return false;
-		}
-
-		return current.IsMatch(e, current is InputEventJoypadMotion);
 	}
 
 	private readonly InputEvent[] _events;
