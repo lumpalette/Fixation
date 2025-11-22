@@ -13,12 +13,6 @@ public sealed partial class Game : Node
 
 	private Game()
 	{
-		if (s_instance is not null)
-		{
-			QueueFree();
-			return;
-		}
-
 		s_instance = this;
 	}
 
