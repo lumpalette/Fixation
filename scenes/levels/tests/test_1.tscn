@@ -1,15 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://pgmrcecerpuq"]
+[gd_scene load_steps=4 format=3 uid="uid://pgmrcecerpuq"]
 
 [ext_resource type="Script" uid="uid://bxel1khva5iqh" path="res://scripts/levels/Level.cs" id="1_qv5wr"]
 [ext_resource type="Texture2D" uid="uid://k38h82pd6oev" path="res://assets/textures/heart.png" id="2_r5yjo"]
+[ext_resource type="Script" uid="uid://cl1cv18lcbjlf" path="res://scripts/tests/InputTest.cs" id="3_jf888"]
 
 [node name="Test1" type="SubViewport"]
-size = Vector2i(320, 180)
 script = ExtResource("1_qv5wr")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-centered = false
-pixel_size = 1.0
-texture_filter = 0
+[node name="PlayerA" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 1, 1)
+texture_filter = 1
+position = Vector2(8.2, 0)
 texture = ExtResource("2_r5yjo")
+script = ExtResource("3_jf888")
+
+[node name="PlayerB" type="Sprite2D" parent="."]
+modulate = Color(0.13725491, 0, 1, 1)
+texture_filter = 1
+position = Vector2(8.2, 0)
+texture = ExtResource("2_r5yjo")
+script = ExtResource("3_jf888")
+_playerIndex = 1
+_deviceId = 0

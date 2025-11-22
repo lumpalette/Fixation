@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cp5n1m3x8wjba"]
+
+[ext_resource type="Script" uid="uid://cyu7uqqcwkht5" path="res://scripts/Game.cs" id="1_lnu2h"]
+[ext_resource type="Script" uid="uid://dknueocx7bxjo" path="res://scripts/input/InputManager.cs" id="2_lbhrr"]
+[ext_resource type="Script" uid="uid://ujwf5u5n783e" path="res://scripts/PlayerManager.cs" id="3_iywne"]
+
+[node name="Game" type="Node" node_paths=PackedStringArray("_input", "_player")]
+script = ExtResource("1_lnu2h")
+_input = NodePath("Input")
+_player = NodePath("Player")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_lbhrr")
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource("3_iywne")

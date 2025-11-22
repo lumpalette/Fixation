@@ -23,7 +23,7 @@ namespace Fixation.Input;
 /// </para>
 /// 
 /// <para>
-/// <b>Meta buttons:</b> Buttons that describe information about the enumeration. <br/>
+/// <b>Meta buttons:</b> Buttons that describe information about the enumeration and other buttons. <br/>
 /// The following buttons are considered meta:
 /// <list type="bullet">
 ///		<item><see cref="Count"/></item>
@@ -166,12 +166,12 @@ public enum GameButton
 	Count,
 
 	/// <summary>
-	/// This is used to represent all game buttons using one value. This is a meta button.
+	/// Represents the value of any game button. This is a meta button.
 	/// </summary>
 	Any,
 
 	/// <summary>
-	/// This is used to represent no game button using one value. This is a meta button.
+	/// Represents the value of no game button. This is a meta button.
 	/// </summary>
 	None
 }

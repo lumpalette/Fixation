@@ -1,16 +1,3 @@
-[gd_scene load_steps=3 format=3 uid="uid://1e8t5xd473hw"]
-
-[ext_resource type="Script" uid="uid://dbvmllvf1y84w" path="res://scripts/levels/LevelManager.cs" id="1_sugp2"]
-[ext_resource type="Script" uid="uid://g42klanyu0wj" path="res://scripts/input/PlayerInputManager.cs" id="2_jyhfs"]
+[gd_scene format=3 uid="uid://1e8t5xd473hw"]
 
 [node name="Main" type="Node"]
-
-[node name="System" type="Node" parent="."]
-
-[node name="Level" type="Node" parent="System"]
-script = ExtResource("1_sugp2")
-
-[node name="Input" type="Node" parent="System"]
-script = ExtResource("2_jyhfs")
-
-[node name="Levels" type="Node" parent="."]

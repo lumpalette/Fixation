@@ -8,6 +8,8 @@ namespace Fixation.Input;
 /// </summary>
 public sealed class InputEventMap
 {
+	private readonly InputEvent[] _events;
+
 	/// <summary>
 	/// Creates an empty <see cref="InputEventMap"/> object.
 	/// </summary>
@@ -26,12 +28,12 @@ public sealed class InputEventMap
 	{
 		get
 		{
-			ValidateButtonIsReal(button);
+			button.EnsureIsReal();
 			return _events[(int)button];
 		}
 		set
 		{
-			ValidateButtonIsReal(button);
+			button.EnsureIsReal();
 			_events[(int)button] = value;
 		}
 	}
@@ -76,15 +78,4 @@ public sealed class InputEventMap
 	{
 		Array.Clear(_events);
 	}
-
-	private static void ValidateButtonIsReal(GameButton button)
-	{
-		int buttonIndex = (int)button;
-		if ((buttonIndex < 0) || (buttonIndex >= (int)GameButton.Count))
-		{
-			throw new ArgumentException($"Button '{button}' is not a real button", nameof(button));
-		}
-	}
-
-	private readonly InputEvent[] _events;
 }
