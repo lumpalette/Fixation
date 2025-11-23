@@ -1,5 +1,7 @@
 using Fixation.Input;
+using Fixation.Players;
 using Godot;
+using System;
 
 namespace Fixation;
 
@@ -9,11 +11,29 @@ namespace Fixation;
 public sealed partial class Game : Node
 {
 	[Export] private InputManager _input;
-	[Export] private PlayerManager _player;
+	[Export] private PartyManager _party;
 
 	private Game()
 	{
+		if (s_instance is not null)
+		{
+			QueueFree();
+			return;
+		}
+
 		s_instance = this;
+	}
+
+	public override void _Ready()
+	{
+		if (Input is null)
+		{
+			throw new NullReferenceException($"'{nameof(Input)}' node is null");
+		}
+		if (Party is null)
+		{
+			throw new NullReferenceException($"'{nameof(Party)}' node is null");
+		}
 	}
 
 	private static Game s_instance;
@@ -24,7 +44,7 @@ public sealed partial class Game : Node
 	public static InputManager Input => s_instance._input;
 
 	/// <summary>
-	/// The player manager. Contains general information about all players. This property is read-only.
+	/// The player party manager. Contains general information about all players. This property is read-only.
 	/// </summary>
-	public static PlayerManager Player => s_instance._player;
+	public static PartyManager Party => s_instance._party;
 }
