@@ -6,12 +6,12 @@ using System;
 namespace Fixation;
 
 /// <summary>
-/// A node that provides global access to the game's subsystems. This class cannot be inherited.
+/// A singleton node that provides global access to the game's subsystems. This class cannot be inherited.
 /// </summary>
 public sealed partial class Game : Node
 {
 	/// <summary>
-	/// The maximum number of players.
+	/// The maximum number of players supported by the game.
 	/// </summary>
 	public const int MaxPlayerCount = 4;
 

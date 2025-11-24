@@ -13,6 +13,7 @@ public partial class InputTest : Sprite2D
 	public override void _Ready()
 	{
 		Game.Party.AssignMember(_playerSlot, new Player() { Name = _playerName, Color = _playerColor });
+		
 		Game.Input[_playerSlot].Device = new Device() { Id = _deviceId };
 
 		Modulate = _playerColor;
@@ -28,6 +29,6 @@ public partial class InputTest : Sprite2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Position += 1.5f * Game.Input.GetVector(_playerSlot);
+		Position += 2f * Game.Input.GetVector(_playerSlot);
 	}
 }
