@@ -2,15 +2,15 @@
 
 [ext_resource type="Script" uid="uid://cyu7uqqcwkht5" path="res://scripts/Game.cs" id="1_lnu2h"]
 [ext_resource type="Script" uid="uid://dknueocx7bxjo" path="res://scripts/input/InputManager.cs" id="2_lbhrr"]
-[ext_resource type="Script" uid="uid://ujwf5u5n783e" path="res://scripts/PlayerManager.cs" id="3_iywne"]
+[ext_resource type="Script" uid="uid://ds3h3nnpe4hmi" path="res://scripts/party/PlayerParty.cs" id="3_lnu2h"]
 
-[node name="Game" type="Node" node_paths=PackedStringArray("_input", "_player")]
+[node name="Game" type="Node" node_paths=PackedStringArray("_input", "_party")]
 script = ExtResource("1_lnu2h")
 _input = NodePath("Input")
-_player = NodePath("Player")
+_party = NodePath("Party")
 
 [node name="Input" type="Node" parent="."]
 script = ExtResource("2_lbhrr")
 
-[node name="Player" type="Node" parent="."]
-script = ExtResource("3_iywne")
+[node name="Party" type="Node" parent="."]
+script = ExtResource("3_lnu2h")

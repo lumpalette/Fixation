@@ -11,24 +11,20 @@ public sealed partial class TextStyle : Resource
 	/// <summary>
 	/// The text font.
 	/// </summary>
-	[Export]
-	public Font Font { get; set; }
+	[Export] public Font Font { get; set; }
 
 	/// <summary>
 	/// The size of the text font, in pixels.
 	/// </summary>
-	[Export]
-	public int FontSize { get; set; }
-	
+	[Export] public int FontSize { get; set; }
+
 	/// <summary>
 	/// The text font color.
 	/// </summary>
-	[Export]
-	public Color Color { get; set; }
+	[Export] public Color Color { get; set; }
 
 	/// <summary>
 	/// The speed at which the glyphs are drawn, in seconds.
 	/// </summary>
-	[Export]
-	public float WriteSpeed { get; set; }
+	[Export] public float WriteSpeed { get; set; }
 }

@@ -13,7 +13,6 @@ config_version=5
 config/name="Fixation"
 run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.5", "C#", "Forward Plus")
-run/max_fps=60
 run/delta_smoothing=false
 config/icon="res://assets/textures/icon.svg"
 

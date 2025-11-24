@@ -1,5 +1,5 @@
 using Fixation.Input;
-using Fixation.Players;
+using Fixation.Party;
 using Godot;
 using System;
 
@@ -10,8 +10,13 @@ namespace Fixation;
 /// </summary>
 public sealed partial class Game : Node
 {
+	/// <summary>
+	/// The maximum number of players.
+	/// </summary>
+	public const int MaxPlayerCount = 4;
+
 	[Export] private InputManager _input;
-	[Export] private PartyManager _party;
+	[Export] private PlayerParty _party;
 
 	private Game()
 	{
@@ -44,7 +49,7 @@ public sealed partial class Game : Node
 	public static InputManager Input => s_instance._input;
 
 	/// <summary>
-	/// The player party manager. Contains general information about all players. This property is read-only.
+	/// The current player party. Contains general information about all players. This property is read-only.
 	/// </summary>
-	public static PartyManager Party => s_instance._party;
+	public static PlayerParty Party => s_instance._party;
 }

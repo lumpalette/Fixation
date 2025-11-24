@@ -9,12 +9,13 @@ namespace Fixation.Input;
 /// </summary>
 public sealed class PlayerInput
 {
+	private float _deadzoneField;
 	private readonly ButtonState[] _buttonStates;
 	private readonly InputEventMap[] _keyMaps;
 	private readonly InputEventMap[] _joyMaps;
 
 	/// <summary>
-	/// Creates a new <see cref="PlayerInput"/> controller, with no device assigned.
+	/// Creates a new <see cref="PlayerInput"/> with no input device assigned.
 	/// </summary>
 	public PlayerInput()
 	{
@@ -34,25 +35,19 @@ public sealed class PlayerInput
 	}
 
 	/// <summary>
+	/// Creates a new <see cref="PlayerInput"/> and assigns it the specified input device.
+	/// </summary>
+	/// <param name="device">The input device to assign.</param>
+	public PlayerInput(Device device) : this()
+	{
+		Device = device;
+	}
+
+	/// <summary>
 	/// The input device assigned to the player.
 	/// </summary>
-	/// <exception cref="ArgumentException">Thrown when set to an invalid device.</exception>
-	public Device? Device
-	{
-		get => _deviceField;
-		set
-		{
-			bool invalidDevice = value.HasValue && (!value.Value.IsValid());
-			if (invalidDevice)
-			{
-				throw new ArgumentException($"Invalid input device (ID = {value.Value.Id})");
-			}
-
-			_deviceField = value;
-		}
-	}
-	private Device? _deviceField;
-
+	public Device? Device { get; set; }
+	
 	/// <summary>
 	/// The current deadzone value, normalized.
 	/// </summary>
@@ -70,8 +65,7 @@ public sealed class PlayerInput
 			_deadzoneField = value;
 		}
 	}
-	private float _deadzoneField;
-
+	
 	/// <summary>
 	/// A read-only collection containing the primary (0) and secondary (1) event maps for keyboard input.
 	/// </summary>
@@ -87,7 +81,7 @@ public sealed class PlayerInput
 	/// </summary>
 	public void Update()
 	{
-		if (Device is null)
+		if (Device?.IsValid() != true)
 		{
 			return;
 		}
@@ -110,35 +104,12 @@ public sealed class PlayerInput
 	/// Gets the current state of the given button.
 	/// </summary>
 	/// <param name="button">The game button to query. The button must be real.</param>
-	/// <returns>A <see cref="GameButtonState"/> representing the state of <paramref name="button"/>.</returns>
+	/// <returns>A <see cref="GameButtonState"/> representing the state of the <paramref name="button"/>.</returns>
 	/// <exception cref="ArgumentException">Thrown if <paramref name="button"/> is not a real button.</exception>
 	public GameButtonState GetButtonState(GameButton button)
 	{
 		button.EnsureIsReal();
 		return GetButtonStateInternal((int)button);
-	}
-
-	private GameButtonState GetButtonStateInternal(int buttonIndex)
-	{
-		ButtonState state = _buttonStates[buttonIndex];
-		if (Engine.IsInPhysicsFrame())
-		{
-			if (state.Down)
-			{
-				return (Engine.GetPhysicsFrames() == state.PressedPhysicsFrame) ? GameButtonState.Pressed : GameButtonState.Down;
-			}
-
-			return (Engine.GetPhysicsFrames() == state.ReleasedPhysicsFrame) ? GameButtonState.Released : GameButtonState.Up;
-		}
-		else
-		{
-			if (state.Down)
-			{
-				return (Engine.GetProcessFrames() == state.PressedProcessFrame) ? GameButtonState.Pressed : GameButtonState.Down;
-			}
-
-			return (Engine.GetProcessFrames() == state.ReleasedProcessFrame) ? GameButtonState.Released : GameButtonState.Up;
-		}
 	}
 
 	/// <summary>
@@ -155,22 +126,6 @@ public sealed class PlayerInput
 		PressButtonInternal((int)button, Engine.IsInPhysicsFrame());
 	}
 
-	private void PressButtonInternal(int buttonIndex, bool inPhysicsFrame)
-	{
-		ButtonState button = _buttonStates[buttonIndex];
-		if (!button.Down)
-		{
-			button.Down = true;
-			button.PressedProcessFrame = Engine.GetProcessFrames();
-			button.PressedPhysicsFrame = Engine.GetPhysicsFrames();
-
-			if (!inPhysicsFrame)
-			{
-				button.PressedPhysicsFrame++;
-			}
-		}
-	}
-
 	/// <summary>
 	/// Simulates a game button release.
 	/// </summary>
@@ -183,22 +138,6 @@ public sealed class PlayerInput
 	{
 		button.EnsureIsReal();
 		ReleaseButtonInternal((int)button, Engine.IsInPhysicsFrame());
-	}
-
-	private void ReleaseButtonInternal(int buttonIndex, bool inPhysicsFrame)
-	{
-		ButtonState button = _buttonStates[buttonIndex];
-		if (button.Down)
-		{
-			button.Down = false;
-			button.ReleasedProcessFrame = Engine.GetProcessFrames();
-			button.ReleasedPhysicsFrame = Engine.GetPhysicsFrames();
-
-			if (!inPhysicsFrame)
-			{
-				button.ReleasedPhysicsFrame++;
-			}
-		}
 	}
 
 	/// <summary>
@@ -229,6 +168,61 @@ public sealed class PlayerInput
 		}
 	}
 
+	private GameButtonState GetButtonStateInternal(int buttonIndex)
+	{
+		ButtonState state = _buttonStates[buttonIndex];
+		if (Engine.IsInPhysicsFrame())
+		{
+			if (state.Down)
+			{
+				return (Engine.GetPhysicsFrames() == state.PressedPhysicsFrame) ? GameButtonState.Pressed : GameButtonState.Down;
+			}
+
+			return (Engine.GetPhysicsFrames() == state.ReleasedPhysicsFrame) ? GameButtonState.Released : GameButtonState.Up;
+		}
+		else
+		{
+			if (state.Down)
+			{
+				return (Engine.GetProcessFrames() == state.PressedProcessFrame) ? GameButtonState.Pressed : GameButtonState.Down;
+			}
+
+			return (Engine.GetProcessFrames() == state.ReleasedProcessFrame) ? GameButtonState.Released : GameButtonState.Up;
+		}
+	}
+
+	private void PressButtonInternal(int buttonIndex, bool inPhysicsFrame)
+	{
+		ButtonState button = _buttonStates[buttonIndex];
+		if (!button.Down)
+		{
+			button.Down = true;
+			button.PressedProcessFrame = Engine.GetProcessFrames();
+			button.PressedPhysicsFrame = Engine.GetPhysicsFrames();
+
+			if (!inPhysicsFrame)
+			{
+				button.PressedPhysicsFrame++;
+			}
+		}
+	}
+
+	private void ReleaseButtonInternal(int buttonIndex, bool inPhysicsFrame)
+	{
+		ButtonState button = _buttonStates[buttonIndex];
+		if (button.Down)
+		{
+			button.Down = false;
+			button.ReleasedProcessFrame = Engine.GetProcessFrames();
+			button.ReleasedPhysicsFrame = Engine.GetPhysicsFrames();
+
+			if (!inPhysicsFrame)
+			{
+				button.ReleasedPhysicsFrame++;
+			}
+		}
+	}
+
 	// we put a PlayerInput parameter here so the method matches the function pointer signature of UpdateButtons().
 	private static bool IsKeyEventActive(InputEvent e, PlayerInput myself)
 	{
@@ -236,7 +230,7 @@ public sealed class PlayerInput
 			|| ((e is InputEventMouseButton mbutton) && Godot.Input.IsMouseButtonPressed(mbutton.ButtonIndex));
 	}
 
-	// we can't make this an instance method because a static reference is required in UpdateButtons().
+	// we can't make this an instance method because a static reference is required for UpdateButtons().
 	private static bool IsJoyEventActive(InputEvent e, PlayerInput myself)
 	{
 		if (e is InputEventJoypadButton jbutton)
