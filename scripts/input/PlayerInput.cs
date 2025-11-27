@@ -35,15 +35,6 @@ public sealed class PlayerInput
 	}
 
 	/// <summary>
-	/// Creates a new <see cref="PlayerInput"/> and assigns it the specified input device.
-	/// </summary>
-	/// <param name="device">The input device to assign.</param>
-	public PlayerInput(Device device) : this()
-	{
-		Device = device;
-	}
-
-	/// <summary>
 	/// The input device assigned to the player.
 	/// </summary>
 	public Device? Device { get; set; }
