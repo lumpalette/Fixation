@@ -34,9 +34,43 @@ public sealed partial class PlayerParty : Node
 	public Player this[PlayerSlot slot] => _members[slot];
 
 	/// <summary>
-	/// The current number of party members. This property is read-only.
+	/// The current number of party members.
 	/// </summary>
 	public int Size { get; private set; }
+
+	/// <summary>
+	/// An enumerator that iterates over the party members.
+	/// </summary>
+	public IEnumerable<Player> Members
+	{
+		get
+		{
+			for (int i = 0; i < Game.MaxPlayerCount; i++)
+			{
+				if (_members[i] is not null)
+				{
+					yield return _members[i];
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// An enumerator that iterates over the collection of occupied slots.
+	/// </summary>
+	public IEnumerable<PlayerSlot> OccupiedSlots
+	{
+		get
+		{
+			for (byte i = 0; i < Game.MaxPlayerCount; i++)
+			{
+				if (_members[i] is not null)
+				{
+					yield return i;
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// Assigns a player to the specified slot in the party.
@@ -102,20 +136,5 @@ public sealed partial class PlayerParty : Node
 	public bool IsSlotOccupied(PlayerSlot slot)
 	{
 		return _members[slot] is not null;
-	}
-
-	/// <summary>
-	/// Gets a sequence of all occupied player slots in the party.
-	/// </summary>
-	/// <returns>A sequence of occupied player slots.</returns>
-	public IEnumerable<PlayerSlot> GetOccupiedSlots()
-	{
-		for (byte i = 0; i < Game.MaxPlayerCount; i++)
-		{
-			if (IsSlotOccupied(i))
-			{
-				yield return i;
-			}
-		}
 	}
 }
