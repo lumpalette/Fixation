@@ -33,11 +33,11 @@ public sealed partial class Game : Node
 	{
 		if (Input is null)
 		{
-			throw new NullReferenceException($"'{nameof(Input)}' node is null");
+			throw new InvalidOperationException($"'{nameof(Input)}' node is null");
 		}
 		if (Party is null)
 		{
-			throw new NullReferenceException($"'{nameof(Party)}' node is null");
+			throw new InvalidOperationException($"'{nameof(Party)}' node is null");
 		}
 	}
 
