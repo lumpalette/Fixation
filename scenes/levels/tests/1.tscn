@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://pgmrcecerpuq"]
+
+[ext_resource type="Texture2D" uid="uid://k38h82pd6oev" path="res://assets/textures/heart.png" id="2_r5yjo"]
+[ext_resource type="Script" uid="uid://cl1cv18lcbjlf" path="res://scripts/tests/InputTest.cs" id="3_jf888"]
+
+[node name="Test1" type="SubViewport"]
+
+[node name="Player_0" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(77, 43)
+texture = ExtResource("2_r5yjo")
+centered = false
+script = ExtResource("3_jf888")
+_playerName = "0"
+_playerColor = Color(0.5545025, 0.46877658, 0.9576209, 1)
+_deviceId = -1
+
+[node name="Player_1" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(202, 91)
+texture = ExtResource("2_r5yjo")
+centered = false
+offset = Vector2(-5, -5)
+script = ExtResource("3_jf888")
+_playerSlot = 1
+_playerName = "1"
+_playerColor = Color(1, 0.21176471, 0.16078432, 1)
+_deviceId = -1

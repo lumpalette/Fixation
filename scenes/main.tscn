@@ -1,26 +1,3 @@
-[gd_scene load_steps=3 format=3 uid="uid://1e8t5xd473hw"]
-
-[ext_resource type="Texture2D" uid="uid://k38h82pd6oev" path="res://assets/textures/heart.png" id="1_0wfyh"]
-[ext_resource type="Script" uid="uid://cl1cv18lcbjlf" path="res://scripts/tests/InputTest.cs" id="1_o5qli"]
+[gd_scene format=3 uid="uid://1e8t5xd473hw"]
 
 [node name="Main" type="Node"]
-
-[node name="Player_0" type="Sprite2D" parent="."]
-texture_filter = 1
-position = Vector2(149, 85)
-texture = ExtResource("1_0wfyh")
-centered = false
-script = ExtResource("1_o5qli")
-_playerName = "0"
-_playerColor = Color(0.5545025, 0.46877658, 0.9576209, 1)
-_deviceId = -1
-
-[node name="Player_1" type="Sprite2D" parent="."]
-texture_filter = 1
-position = Vector2(198, 89)
-texture = ExtResource("1_0wfyh")
-centered = false
-script = ExtResource("1_o5qli")
-_playerSlot = 1
-_playerName = "1"
-_playerColor = Color(1, 0.21176471, 0.16078432, 1)
