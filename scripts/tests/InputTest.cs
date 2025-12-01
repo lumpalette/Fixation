@@ -12,7 +12,10 @@ public partial class InputTest : Sprite2D
 
 	public override void _Ready()
 	{
-		Game.Party.AssignMember(_playerSlot, new Player() { Name = _playerName, Color = _playerColor });
+		if (Game.Party.IsSlotOccupied(_playerSlot))
+		{
+			Game.Party.AssignMember(_playerSlot, new Player() { Name = _playerName, Color = _playerColor });
+		}
 		
 		Game.Input[_playerSlot].Device = new Device() { Id = _deviceId };
 

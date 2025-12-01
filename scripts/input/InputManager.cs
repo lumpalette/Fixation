@@ -24,23 +24,6 @@ public sealed partial class InputManager : Node
 	/// <returns>The <see cref="PlayerInput"/> connected to the <paramref name="slot"/>, or <see langword="null"/> if no player is connected.</returns>
 	public PlayerInput this[PlayerSlot slot] => _playerSlots[slot];
 
-	/// <summary>
-	/// An enumerator that iterates over the players connected to the input system.
-	/// </summary>
-	public IEnumerable<PlayerInput> Players
-	{
-		get
-		{
-			for (int i = 0; i < Game.MaxPlayerCount; i++)
-			{
-				if (_playerSlots[i] is not null)
-				{
-					yield return _playerSlots[i];
-				}
-			}
-		}
-	}
-
 	public override void _Ready()
 	{
 		// Slot 0 always has a player connected, regardless of whether the actual player exists or not.
@@ -214,12 +197,12 @@ public sealed partial class InputManager : Node
 			return;
 		}
 
-		foreach (PlayerInput player in Players)
+		foreach (PlayerSlot slot in Game.Party.GetOccupiedSlots())
 		{
-			if (player.Device?.Id == device)
+			if (this[slot].Device?.Id == device)
 			{
 				// We don't stop here because multiple players can share the same device (they shouldn't, but they can [qué les pasa enfermos]).
-				player.Device = null;
+				this[slot].Device = null;
 			}
 		}
 
