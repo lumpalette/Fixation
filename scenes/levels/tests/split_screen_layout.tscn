@@ -1,0 +1,221 @@
+[gd_scene load_steps=7 format=3 uid="uid://blmmnday8gkqv"]
+
+[ext_resource type="FontFile" uid="uid://b6lo1fqn3jau0" path="res://assets/fonts/heartshape.png" id="1_hdh5n"]
+[ext_resource type="FontFile" uid="uid://dis601ygwcd1u" path="res://assets/fonts/main.ttf" id="1_tojxo"]
+[ext_resource type="Texture2D" uid="uid://k38h82pd6oev" path="res://assets/textures/heart.png" id="2_1mdwk"]
+[ext_resource type="Script" uid="uid://b4vgde6suedr6" path="res://scripts/tests/divisor.gd" id="3_bu8u3"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_0wfyh"]
+font = ExtResource("1_tojxo")
+font_size = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_goup1"]
+font = ExtResource("1_hdh5n")
+font_size = 7
+
+[node name="Screen" type="Node"]
+
+[node name="Layout2" type="CanvasGroup" parent="."]
+scale = Vector2(2, 2)
+
+[node name="BG_1" type="ColorRect" parent="Layout2"]
+offset_right = 160.0
+offset_bottom = 180.0
+color = Color(0.1764706, 0.24313726, 0, 1)
+
+[node name="BG_2" type="ColorRect" parent="Layout2"]
+offset_left = 160.0
+offset_right = 320.0
+offset_bottom = 180.0
+color = Color(0.30980393, 0.11372549, 0, 1)
+
+[node name="TextBox_1" type="ColorRect" parent="Layout2"]
+offset_top = 150.0
+offset_right = 160.0
+offset_bottom = 180.0
+size_flags_vertical = 8
+color = Color(0, 0, 0, 1)
+
+[node name="Text" type="Label" parent="Layout2/TextBox_1"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 8.0
+offset_top = 6.0
+offset_right = 152.0
+offset_bottom = 30.0
+text = "Poisoned by the
+moonlight."
+label_settings = SubResource("LabelSettings_0wfyh")
+
+[node name="TextBox_2" type="ColorRect" parent="Layout2"]
+offset_left = 160.0
+offset_top = 150.0
+offset_right = 320.0
+offset_bottom = 180.0
+size_flags_vertical = 8
+color = Color(0, 0, 0, 1)
+
+[node name="Text" type="Label" parent="Layout2/TextBox_2"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 8.0
+offset_top = 7.0
+offset_right = 152.0
+offset_bottom = 31.0
+text = "LOOKING FORWARD TO
+THE END."
+label_settings = SubResource("LabelSettings_goup1")
+
+[node name="Heart_1" type="Sprite2D" parent="Layout2"]
+modulate = Color(1, 0, 1, 1)
+texture_filter = 1
+position = Vector2(74, 75)
+texture = ExtResource("2_1mdwk")
+centered = false
+
+[node name="Heart_2" type="Sprite2D" parent="Layout2/Heart_1"]
+modulate = Color(0, 0.6896637, 0.8493303, 1)
+texture_filter = 1
+position = Vector2(18, 7)
+texture = ExtResource("2_1mdwk")
+centered = false
+
+[node name="Heart_2" type="Sprite2D" parent="Layout2"]
+modulate = Color(1, 0, 1, 1)
+texture_filter = 1
+position = Vector2(219, 69)
+texture = ExtResource("2_1mdwk")
+centered = false
+
+[node name="Heart_1" type="Sprite2D" parent="Layout2/Heart_2"]
+modulate = Color(0, 0.6896637, 0.8493303, 1)
+texture_filter = 1
+position = Vector2(18, 7)
+texture = ExtResource("2_1mdwk")
+centered = false
+
+[node name="DivisorC" type="Line2D" parent="Layout2"]
+position = Vector2(160, -0.005464494)
+scale = Vector2(1, 0.9945355)
+points = PackedVector2Array(0, 0, 0, 180)
+width = 1.0
+script = ExtResource("3_bu8u3")
+
+[node name="DivisorL" type="Line2D" parent="Layout2"]
+position = Vector2(159.00002, -0.0054644947)
+scale = Vector2(1, 0.9945355)
+points = PackedVector2Array(0, 0, 0, 180)
+width = 1.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="DivisorR" type="Line2D" parent="Layout2"]
+position = Vector2(161.00002, -0.0054644947)
+scale = Vector2(1, 0.9945355)
+points = PackedVector2Array(0, 0, 0, 180)
+width = 1.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="Layout3" type="CanvasGroup" parent="."]
+visible = false
+
+[node name="BG_1" type="ColorRect" parent="Layout3"]
+offset_right = 320.0
+offset_bottom = 180.0
+color = Color(0.1764706, 0.24313726, 0, 1)
+
+[node name="BG_2" type="ColorRect" parent="Layout3"]
+offset_left = 320.0
+offset_right = 640.0
+offset_bottom = 180.0
+color = Color(0.30980393, 0.11372549, 0, 1)
+
+[node name="BG_3" type="ColorRect" parent="Layout3"]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 180.0
+offset_right = 320.0
+offset_bottom = 360.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0.2907539, 0.00024756053, 0.36310858, 1)
+
+[node name="TextBox_1" type="ColorRect" parent="Layout3"]
+offset_top = 320.0
+offset_right = 320.0
+offset_bottom = 360.0
+size_flags_vertical = 8
+color = Color(0, 0, 0, 1)
+
+[node name="Text" type="Label" parent="Layout3/TextBox_1"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 9.0
+offset_top = 7.0
+offset_right = 310.0
+offset_bottom = 34.0
+text = "Bajo el brillo de luna.
+Envenenado por la luz de la luna.
+"
+label_settings = SubResource("LabelSettings_0wfyh")
+
+[node name="TextBox_2" type="ColorRect" parent="Layout3"]
+offset_top = 140.0
+offset_right = 320.0
+offset_bottom = 180.0
+size_flags_vertical = 8
+color = Color(0, 0, 0, 1)
+
+[node name="Text" type="Label" parent="Layout3/TextBox_2"]
+texture_filter = 1
+layout_mode = 0
+offset_left = 9.0
+offset_top = 6.0
+offset_right = 310.0
+offset_bottom = 43.0
+text = "EN EL LUGAR DONDE LAS LINEAS COINCIDEN
+DONDE MERODEARAS EN ESTA CIUDAD DE LUCES
+BAJO EL BRILLO DE UNA LUNA JOVEN
+"
+label_settings = SubResource("LabelSettings_goup1")
+
+[node name="DivisorL" type="Line2D" parent="Layout3"]
+position = Vector2(318, 0)
+points = PackedVector2Array(0, 0, 0, 360)
+width = 2.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="DivisorR" type="Line2D" parent="Layout3"]
+position = Vector2(322, 0)
+points = PackedVector2Array(0, 0, 0, 360)
+width = 2.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="DivisorL2" type="Line2D" parent="Layout3"]
+position = Vector2(0, 182)
+rotation = -1.5707964
+points = PackedVector2Array(0, 0, 0, 640)
+width = 2.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="DivisorR2" type="Line2D" parent="Layout3"]
+position = Vector2(0, 178)
+rotation = -1.5707964
+points = PackedVector2Array(0, 0, 0, 640)
+width = 2.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="DivisorC" type="Line2D" parent="Layout3"]
+position = Vector2(320, 0)
+points = PackedVector2Array(0, 0, 0, 360)
+width = 2.0
+script = ExtResource("3_bu8u3")
+
+[node name="DivisorC2" type="Line2D" parent="Layout3"]
+position = Vector2(0, 180)
+rotation = 4.712389
+points = PackedVector2Array(0, 0, 0, 640)
+width = 2.0
+script = ExtResource("3_bu8u3")

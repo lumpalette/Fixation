@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="LabelStyle" load_steps=3 format=3 uid="uid://cxuta2f0t1aay"]
+
+[ext_resource type="FontFile" uid="uid://dis601ygwcd1u" path="res://assets/fonts/main.ttf" id="1_065gb"]
+[ext_resource type="Script" uid="uid://c3yr4qjyr72ri" path="res://scripts/ui/text/LabelStyle.cs" id="2_065gb"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("2_065gb")
+Font = ExtResource("1_065gb")
+FontSize = 8

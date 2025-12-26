@@ -58,11 +58,12 @@ public readonly record struct Device
 	/// <exception cref="ArgumentException">Thrown if <paramref name="id"/> does not refer to a valid joypad.</exception>
 	public static Device CreateJoypad(int id)
 	{
-		if (Godot.Input.GetConnectedJoypads().Contains(id))
+		Device device = new() { Id = id };
+		if (!device.IsValid())
 		{
 			throw new ArgumentException($"Invalid joypad ID ({id})", nameof(id));
 		}
 
-		return new Device() { Id = id };
+		return device;
 	}
 }

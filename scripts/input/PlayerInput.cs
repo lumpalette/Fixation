@@ -7,7 +7,7 @@ namespace Fixation.Input;
 /// <summary>
 /// Representation of a player in the input system. Contains an input device, mappings and other settings. This class cannot be inherited.
 /// </summary>
-public sealed class PlayerInput
+public sealed partial class PlayerInput
 {
 	private float _deadzoneField;
 	private readonly ButtonState[] _buttonStates;
@@ -42,7 +42,7 @@ public sealed class PlayerInput
 	/// <summary>
 	/// The current deadzone value, normalized.
 	/// </summary>
-	/// <exception cref="ArgumentOutOfRangeException">Thrown when set to a value outside the valid range (0-1).</exception>
+	/// <exception cref="ArgumentOutOfRangeException">Thrown when it's set to a value outside the valid range (0-1).</exception>
 	public float Deadzone
 	{
 		get => _deadzoneField;
@@ -239,7 +239,10 @@ public sealed class PlayerInput
 
 		return false;
 	}
+}
 
+partial class PlayerInput
+{
 	// This class defines 4 timestamps to record when the player presses or releases a game button for the two game loops of the engine.
 	// This is because InputManager.IsPressed/Released() can be called in _Process() and _PhysicsProcess(). The way these methods work
 	// is by comparing if the current frame matches the recorded frame. Since the process and physics loops can go at different speeds,
@@ -247,14 +250,19 @@ public sealed class PlayerInput
 	// in the loop going faster, but not in the other.
 	private class ButtonState
 	{
+		// Whether the button is currently held down or not.
 		public bool Down;
 
+		// The process frame in which this button was pressed.
 		public ulong PressedProcessFrame;
 
+		// The process frame in which this button was released.
 		public ulong PressedPhysicsFrame;
-		
+
+		// The physics frame in which this button was pressed.
 		public ulong ReleasedProcessFrame = ulong.MaxValue;
 
+		// The physics frame in which this button was released.
 		public ulong ReleasedPhysicsFrame = ulong.MaxValue;
 	}
 }

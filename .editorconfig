@@ -11,4 +11,5 @@ insert_final_newline = true
 
 ### .NET ###
 csharp_style_namespace_declarations = file_scoped
+csharp_style_prefer_primary_constructors = false
 dotnet_style_namespace_match_folder = false

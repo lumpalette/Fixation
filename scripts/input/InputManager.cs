@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
 namespace Fixation.Input;
 
@@ -153,9 +152,9 @@ public sealed partial class InputManager : Node
 		PlayerInput player = GetValidatedPlayer(slot);
 
 		float x = ((player.GetButtonState(GameButton.Right) == GameButtonState.Down) ? 1f : 0f)
-			- ((player.GetButtonState(GameButton.Left) == GameButtonState.Down) ? 1f : 0f);
+				- ((player.GetButtonState(GameButton.Left) == GameButtonState.Down) ? 1f : 0f);
 		float y = ((player.GetButtonState(GameButton.Down) == GameButtonState.Down) ? 1f : 0f)
-			- ((player.GetButtonState(GameButton.Up) == GameButtonState.Down) ? 1f : 0f);
+				- ((player.GetButtonState(GameButton.Up) == GameButtonState.Down) ? 1f : 0f);
 
 		return new Vector2(x, y).Normalized();
 	}

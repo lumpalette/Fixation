@@ -15,8 +15,10 @@ public sealed partial class Game : Node
 	/// </summary>
 	public const int MaxPlayerCount = 4;
 
-	[Export] private InputManager _input;
-	[Export] private PlayerParty _party;
+	[Export]
+	private InputManager _input;
+	[Export]
+	private PlayerParty _party;
 
 	private Game()
 	{

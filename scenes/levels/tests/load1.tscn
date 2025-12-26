@@ -26,3 +26,5 @@ _playerSlot = 1
 _playerName = "1"
 _playerColor = Color(1, 0.21176471, 0.16078432, 1)
 _deviceId = -1
+
+[node name="Camera2D" type="Camera2D" parent="."]
