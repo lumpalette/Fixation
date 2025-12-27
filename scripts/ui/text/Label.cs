@@ -97,118 +97,78 @@ public sealed partial class Label : Control
 
 	private void RegenerateText()
 	{
-		var writer = new Typewriter(Style ?? GD.Load<LabelStyle>(DefaultStylePath), Size.X);
-		var parsedText = new StringBuilder();
-
-		// Analyze the text character by character.
-		foreach (char c in Text)
-		{
-			switch (c)
-			{
-				// End of text.
-				case '\0':
-					break;
-
-				// Formatting tags.
-				case '<':
-					continue;
-				case '>':
-					continue;
-
-				// Newlines and carriage modifiers.
-				case '\n':
-					writer.CarriageReturn();
-					writer.LineFeed();
-					break;
-				case '\r':
-					writer.CarriageReturn();
-					break;
-				case ' ':
-					writer.Space(1);
-					break;
-				case '\t':
-					writer.Space(4);
-					break;
-
-				// Non-breaking space.
-				case '\u00A0':
-					writer.Append(' ');
-					break;
-
-				// Printable character.
-				default:
-					if (!char.IsControl(c))
-					{
-						writer.Append(c);
-					}
-					break;
-			}
-			
-			parsedText.Append(c);
-		}
-
-		Glyphs = writer.FormFeed();
-		ParsedText = parsedText.ToString();
+		
 	}
-}
 
-partial class Label
-{
-	// A funny little helper class for the Label.RegenerateText() method.
+	// A funny little helper class for RegenerateText() that manages glyph writing and layout.
 	// Innacurate with how actual typewriters work but whatever.
 	private class Typewriter
 	{
-		private LabelStyle _style;
-		private int _lineWidth;
-		private int _lineHeight;
+		private LabelStyle _currentStyle;
 		private Vector2I _carriage;
-		private readonly List<Glyph> _textLine;
-		private readonly List<Glyph> _textPage;
 		private readonly float _pageWidth;
-		private readonly StringBuilder _wordBuilder;
+		private readonly List<Glyph> _textPage;
+		private readonly List<Glyph> _textLine;
+		private readonly StringBuilder _wordBuffer;
 
-		public Typewriter(LabelStyle style, float pageWidth)
+		public Typewriter(float pageWidth, LabelStyle style)
 		{
-			_style = (LabelStyle)style.Duplicate();
+			SetStyle(style);
 			_pageWidth = pageWidth;
+
 			_textPage = [];
 			_textLine = [];
-			_wordBuilder = new StringBuilder();
+
+			_wordBuffer = new StringBuilder();
 		}
 
-		// Enqueues the specified character into the word buffer.
-		public void Append(char character)
+		// Sets the current text style to a copy of the given style.
+		public void SetStyle(LabelStyle style)
 		{
-			_wordBuilder.Append(character);
+			_currentStyle = (LabelStyle)style.Duplicate();
 		}
 
-		// Adds the specified amount of spaces to the current line.
+		// Writes the specified character into the word buffer.
+		public void Write(char character)
+		{
+			_wordBuffer.Append(character);
+		}
+
+		// Moves the carriage by inserting the specified amount of spaces.
 		public void Space(int n)
 		{
-			Advance(_style.GetHorizontalAdvance() * n);
+			SubmitWord();
+			_carriage.X += n * (int)(_currentStyle.FontSize * _currentStyle.Spacing.X);
 		}
 
-		public void Advance(float pixels)
+		private void SubmitWord()
 		{
+			// Add a new line if the word doesn't fit in the current one.
+			int wordWidth = _wordBuffer.Length * _currentStyle.FontSize;
+			if (_carriage.X + wordWidth >= _pageWidth)
+			{
 
+			}
+
+			// Append the word at the end of the line.
+			foreach (char c in _wordBuffer.ToString())
+			{
+				WriteGlyph(new CharacterGlyph()
+				{
+					Character = c.ToString(),
+					Font = _currentStyle.Font,
+					FontSize = _currentStyle.FontSize,
+					Position = _carriage,
+					Color = _currentStyle.Color
+				});
+			}
+
+			_wordBuffer.Clear();
 		}
 
-		// Resets the carriage position back to the start of the line.
-		public void CarriageReturn()
-		{
-			
-		}
-
-		// Resets the carriage position and inserts a new line.
-		public void LineFeed()
+		private void WriteGlyph(Glyph glyph)
 		{
 
-		}
-
-		// Returns all lines of text written as a continuous array of glyphs.
-		public Glyph[] FormFeed()
-		{
-			
 		}
 	}
 }

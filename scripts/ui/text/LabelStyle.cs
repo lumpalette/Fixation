@@ -46,22 +46,4 @@ public sealed partial class LabelStyle : Resource
 	/// </summary>
 	[Export]
 	public VerticalAlignment VerticalAlignment { get; set; }
-
-	/// <summary>
-	/// Calculates the distance the cursor moves horizontally after drawing one glyph.
-	/// </summary>
-	/// <returns>The current horizontal advance, in pixels.</returns>
-	public int GetHorizontalAdvance()
-	{
-		return (int)(FontSize * Spacing.X);
-	}
-
-	/// <summary>
-	/// Calculates the distance the cursor moves vertically after inserting a new line of text.
-	/// </summary>
-	/// <returns>The current vertical advance, in pixels.</returns>
-	public int GetVerticalAdvance()
-	{
-		return (int)(FontSize * Spacing.Y);
-	}
 }

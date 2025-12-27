@@ -7,7 +7,7 @@ namespace Fixation.Input;
 /// <summary>
 /// Representation of a player in the input system. Contains an input device, mappings and other settings. This class cannot be inherited.
 /// </summary>
-public sealed partial class PlayerInput
+public sealed class PlayerInput
 {
 	private float _deadzoneField;
 	private readonly ButtonState[] _buttonStates;
@@ -239,10 +239,7 @@ public sealed partial class PlayerInput
 
 		return false;
 	}
-}
 
-partial class PlayerInput
-{
 	// This class defines 4 timestamps to record when the player presses or releases a game button for the two game loops of the engine.
 	// This is because InputManager.IsPressed/Released() can be called in _Process() and _PhysicsProcess(). The way these methods work
 	// is by comparing if the current frame matches the recorded frame. Since the process and physics loops can go at different speeds,
