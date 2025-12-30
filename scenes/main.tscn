@@ -1,20 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://1e8t5xd473hw"]
+[gd_scene load_steps=4 format=3 uid="uid://1e8t5xd473hw"]
 
-[ext_resource type="Script" uid="uid://bjoeqoid1sdbf" path="res://scripts/ui/text/Label.cs" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://cdf5nsatg135o" path="res://scripts/tests/GlyphTest.cs" id="1_0wfyh"]
 [ext_resource type="FontFile" uid="uid://dis601ygwcd1u" path="res://assets/fonts/main.ttf" id="2_sugp2"]
-[ext_resource type="Script" uid="uid://c3yr4qjyr72ri" path="res://scripts/ui/text/LabelStyle.cs" id="3_jyhfs"]
 
-[sub_resource type="Resource" id="Resource_tbgi4"]
-script = ExtResource("3_jyhfs")
-Font = ExtResource("2_sugp2")
-FontSize = 8
-Spacing = Vector2(1, 2)
-metadata/_custom_type_script = "uid://c3yr4qjyr72ri"
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0wfyh"]
 
 [node name="Main" type="Node"]
 
 [node name="Control" type="Control" parent="."]
 texture_filter = 1
+material = SubResource("CanvasItemMaterial_0wfyh")
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -23,11 +18,9 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -124.0
 offset_top = -30.5
-offset_right = 115.0
+offset_right = -116.0
 offset_bottom = 30.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_o5qli")
-Text = "Come follow me into the dark
-With you heart as my mark"
-Style = SubResource("Resource_tbgi4")
+script = ExtResource("1_0wfyh")
+_font = ExtResource("2_sugp2")

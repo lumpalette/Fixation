@@ -1,12 +1,12 @@
 using Godot;
 
-namespace Fixation.UI.Text;
+namespace Fixation.UI;
 
 /// <summary>
-/// A collection of formatting attributes that can be applied to <see cref="Label"/> objects. This class cannot be inherited.
+/// A collection of formatting attributes that can be applied to <see cref="Text"/> objects. This class cannot be inherited.
 /// </summary>
 [GlobalClass, Tool]
-public sealed partial class LabelStyle : Resource
+public sealed partial class TextStyle : Resource
 {
 	/// <summary>
 	/// The text font resource.
@@ -23,6 +23,7 @@ public sealed partial class LabelStyle : Resource
 	/// <summary>
 	/// The font color of the text.
 	/// </summary>
+	/// <value>By default, this is set to <see cref="Colors.White"/>.</value>
 	[Export]
 	public Color Color { get; set; } = Colors.White;
 
@@ -32,6 +33,7 @@ public sealed partial class LabelStyle : Resource
 	/// <remarks>
 	/// These values work as multipliers, relative to <see cref="FontSize"/>.
 	/// </remarks>
+	/// <value>By default, this is set to <see cref="Vector2.One"/>.</value>
 	[Export]
 	public Vector2 Spacing { get; set; } = Vector2.One;
 
@@ -46,4 +48,11 @@ public sealed partial class LabelStyle : Resource
 	/// </summary>
 	[Export]
 	public VerticalAlignment VerticalAlignment { get; set; }
+
+	/// <summary>
+	/// The maximum number of lines a page can contain. A value of -1 indicates no limit.
+	/// </summary>
+	/// <value>By default, this is set to -1.</value>
+	[Export]
+	public int LinesPerPage { get; set; } = -1;
 }

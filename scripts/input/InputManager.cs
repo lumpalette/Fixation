@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Fixation.Input;
 
@@ -14,14 +16,16 @@ public sealed partial class InputManager : Node
 	private InputManager()
 	{
 		_playerSlots = new PlayerInput[Game.MaxPlayerCount];
+		Slots = _playerSlots.AsReadOnly();
 	}
 
 	/// <summary>
-	/// Gets the player connected at the specified slot.
+	/// A read-only collection that exposes all player slots.
 	/// </summary>
-	/// <param name="slot">The slot to access.</param>
-	/// <returns>The <see cref="PlayerInput"/> connected to the <paramref name="slot"/>, or <see langword="null"/> if no player is connected.</returns>
-	public PlayerInput this[PlayerSlot slot] => _playerSlots[slot];
+	/// <remarks>
+	/// A slot returns <see langword="null"/> if there's no player assigned to that slot.
+	/// </remarks>
+	public ReadOnlyCollection<PlayerInput> Slots { get; }
 
 	public override void _Ready()
 	{
@@ -196,12 +200,12 @@ public sealed partial class InputManager : Node
 			return;
 		}
 
-		foreach (PlayerSlot slot in Game.Party.GetOccupiedSlots())
+		foreach (PlayerInput player in _playerSlots)
 		{
-			if (this[slot].Device?.Id == device)
+			if (player?.Device?.Id == device)
 			{
-				// We don't stop here because multiple players can share the same device (they shouldn't, but they can [qué les pasa enfermos]).
-				this[slot].Device = null;
+				// We don't stop here because multiple players can share the same device(they shouldn't, but they can [qué les pasa enfermos]).
+				player.Device = null;
 			}
 		}
 

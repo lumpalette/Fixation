@@ -3,7 +3,7 @@ using Godot;
 
 namespace Fixation.Tests;
 
-public partial class InputTest : Sprite2D
+internal partial class InputTest : Sprite2D
 {
 	[Export]
 	private byte _playerSlot;
@@ -24,7 +24,7 @@ public partial class InputTest : Sprite2D
 			Game.Party.AssignMember(_playerSlot, new Player() { Name = _playerName, Color = _playerColor });
 		}
 		
-		Game.Input[_playerSlot].Device = new Device() { Id = _deviceId };
+		Game.Input.Slots[_playerSlot].Device = new Device() { Id = _deviceId };
 
 		Modulate = _playerColor;
 	}

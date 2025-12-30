@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Fixation.Input;
@@ -29,9 +30,8 @@ public sealed class PlayerInput
 
 		_keyMaps = [.. InputDefaults.KeyEventMaps];
 		_joyMaps = [.. InputDefaults.JoyEventMaps];
-
-		KeyEventMaps = Array.AsReadOnly(_keyMaps);
-		JoyEventMaps = Array.AsReadOnly(_joyMaps);
+		KeyEventMaps = _keyMaps.AsReadOnly();
+		JoyEventMaps = _joyMaps.AsReadOnly();
 	}
 
 	/// <summary>
@@ -143,6 +143,7 @@ public sealed class PlayerInput
 		}
 	}
 
+	// Updates the press state of all game buttons using the specified event map and input device handler.
 	private unsafe void UpdateButtons(InputEventMap[] maps, delegate* managed<InputEvent, PlayerInput, bool> eventActive)
 	{
 		for (int i = 0; i < (int)GameButton.Count; i++)
@@ -159,6 +160,7 @@ public sealed class PlayerInput
 		}
 	}
 
+	// Implementation for GetButtonState() that skips button validation.
 	private GameButtonState GetButtonStateInternal(int buttonIndex)
 	{
 		ButtonState state = _buttonStates[buttonIndex];
@@ -182,6 +184,7 @@ public sealed class PlayerInput
 		}
 	}
 
+	// Implementation for PressButton() that skips button validation.
 	private void PressButtonInternal(int buttonIndex, bool inPhysicsFrame)
 	{
 		ButtonState button = _buttonStates[buttonIndex];
@@ -198,6 +201,7 @@ public sealed class PlayerInput
 		}
 	}
 
+	// Implementation for ReleaseButton() that skips button validation.
 	private void ReleaseButtonInternal(int buttonIndex, bool inPhysicsFrame)
 	{
 		ButtonState button = _buttonStates[buttonIndex];

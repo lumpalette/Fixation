@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Fixation.Party;
 
@@ -14,6 +15,7 @@ public sealed partial class PlayerParty : Node
 	private PlayerParty()
 	{
 		_members = new Player[Game.MaxPlayerCount];
+		Slots = _members.AsReadOnly();
 	}
 
 	/// <summary>
@@ -27,11 +29,12 @@ public sealed partial class PlayerParty : Node
 	public event EventHandler<PartyMemberEventArgs> MemberRemoved;
 
 	/// <summary>
-	/// Gets the player assigned to the specified slot.
+	/// A read-only collection that exposes all the player slots of the party.
 	/// </summary>
-	/// <param name="slot">The slot to access.</param>
-	/// <returns>The <see cref="Player"/> assigned to the <paramref name="slot"/>, or <see langword="null"/> is the slot is unoccupied.</returns>
-	public Player this[PlayerSlot slot] => _members[slot];
+	/// <remarks>
+	/// A slot returns <see langword="null"/> if there's no player is assigned to that slot.
+	/// </remarks>
+	public ReadOnlyCollection<Player> Slots { get; }
 
 	/// <summary>
 	/// The current number of party members. This property is read-only.
